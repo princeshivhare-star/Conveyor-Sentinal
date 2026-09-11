@@ -1,0 +1,21 @@
+# Environment variables / secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+
+# Python virtual environment
+.venv/
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,1596 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  >
+
+  <title>
+    Conveyor Belt Monitoring System
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="styles.css"
+  >
+</head>
+
+
+<body>
+
+<div class="app">
+
+  <!-- =====================================================
+       SIDEBAR
+  ====================================================== -->
+
+  <aside class="sidebar">
+
+    <div class="brand">
+
+      <div class="belt-logo">
+        <span></span>
+        <span></span>
+        <span></span>
+        <b></b>
+      </div>
+
+      <div class="brand-text">
+        CONVEYOR
+        <br>
+        <small>MONITORING</small>
+      </div>
+
+    </div>
+
+
+    <nav id="mainNav">
+
+      <button
+        type="button"
+        class="nav active"
+        data-view="dashboard"
+      >
+        <span class="ico">⌂</span>
+        <span>Dashboard</span>
+      </button>
+
+
+      <button
+        type="button"
+        class="nav"
+        data-view="live"
+      >
+        <span class="ico">▣</span>
+        <span>Live View</span>
+      </button>
+
+
+      <button
+        type="button"
+        class="nav"
+        data-view="sensors"
+      >
+        <span class="ico">▥</span>
+        <span>Sensor Data</span>
+      </button>
+
+
+      <button
+        type="button"
+        class="nav"
+        data-view="ai"
+      >
+        <span class="ico">◉</span>
+        <span>AI Detection</span>
+      </button>
+
+
+      <button
+        type="button"
+        class="nav alertnav"
+        data-view="alerts"
+      >
+        <span class="ico">♧</span>
+        <span>Alerts</span>
+        <b id="alertBadge">0</b>
+      </button>
+
+
+      <button
+        type="button"
+        class="nav"
+        data-view="logs"
+      >
+        <span class="ico">▤</span>
+        <span>Logs</span>
+      </button>
+
+
+      <button
+        type="button"
+        class="nav"
+        data-view="settings"
+      >
+        <span class="ico">⚙</span>
+        <span>Settings</span>
+      </button>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+      <div class="mine-mark">
+        ◢
+      </div>
+
+      <strong>
+        Safer Mines
+        <br>
+        Smarter Operations
+      </strong>
+
+      <small>
+        Built for a Safer Tomorrow
+      </small>
+
+    </div>
+
+  </aside>
+
+
+  <!-- =====================================================
+       MAIN
+  ====================================================== -->
+
+  <main class="main">
+
+    <!-- TOP BAR -->
+
+    <header class="topbar">
+
+      <div>
+
+        <h1>
+          Conveyor Belt Monitoring System
+        </h1>
+
+        <p>
+          AI Powered Predictive Maintenance
+        </p>
+
+      </div>
+
+
+      <div class="top-status">
+
+        <div class="clock">
+
+          <span id="date">
+            11 Sep 2026
+          </span>
+
+          <strong id="time">
+            07:00:00 PM
+          </strong>
+
+        </div>
+
+
+        <div
+          class="online off"
+          id="onlineBox"
+        >
+
+          <i id="onlineDot"></i>
+
+          <strong id="onlineText">
+            System Offline
+          </strong>
+
+          <small id="connectionText">
+            ESP32 disconnected
+          </small>
+
+        </div>
+
+      </div>
+
+    </header>
+
+
+    <!-- =================================================
+         DASHBOARD
+    ================================================== -->
+
+    <section
+      class="view active-view"
+      id="view-dashboard"
+      aria-hidden="false"
+    >
+
+      <div class="grid">
+
+
+        <!-- LIVE CAMERA -->
+
+        <article class="card camera-card">
+
+          <div class="card-title">
+
+            <span class="title-icon">
+              ▣
+            </span>
+
+            <b>
+              Live Camera Feed
+            </b>
+
+            <em>
+              ● LIVE
+            </em>
+
+          </div>
+
+
+          <div
+            class="camera-wrap"
+            id="cameraWrap"
+          >
+
+            <video
+              id="camera"
+              autoplay
+              playsinline
+              muted
+            ></video>
+
+
+            <!-- REAL AI OVERLAY -->
+
+            <canvas
+              id="cameraOverlay"
+              class="ai-overlay"
+            ></canvas>
+
+
+            <div class="camera-placeholder">
+
+              <div>
+                LIVE CAMERA
+              </div>
+
+              <small>
+                Select your USB webcam and start the feed
+              </small>
+
+            </div>
+
+
+            <span class="fps">
+              FPS:
+              <span id="fps">0</span>
+            </span>
+
+          </div>
+
+
+          <div class="camera-actions">
+
+            <select id="cameraSelect">
+              <option value="">
+                Detecting cameras...
+              </option>
+            </select>
+
+
+            <button id="startCamera">
+              Start Camera
+            </button>
+
+
+            <button
+              id="stopCamera"
+              class="stop-btn"
+            >
+              Stop
+            </button>
+
+
+            <span id="cameraState">
+              Camera not started
+            </span>
+
+          </div>
+
+        </article>
+
+
+        <!-- SENSOR DATA -->
+
+        <article class="card sensors-card">
+
+          <div class="card-title">
+
+            <span class="title-icon">
+              ⌁
+            </span>
+
+            <b>
+              Sensor Readings (ESP32)
+            </b>
+
+            <span class="wifi">
+              ⌁
+            </span>
+
+          </div>
+
+
+          <div class="sensor-grid">
+
+
+            <div class="sensor">
+
+              <i>〰</i>
+
+              <div>
+
+                <span>
+                  Vibration
+                </span>
+
+                <strong>
+                  <span id="vibration">
+                    --
+                  </span>
+                  <small>
+                    mm/s
+                  </small>
+                </strong>
+
+                <small>
+                  Normal: &lt; 4.0
+                </small>
+
+              </div>
+
+            </div>
+
+
+            <div class="sensor">
+
+              <i>ϟ</i>
+
+              <div>
+
+                <span>
+                  Motor Current
+                </span>
+
+                <strong>
+                  <span id="current">
+                    --
+                  </span>
+                  <small>
+                    A
+                  </small>
+                </strong>
+
+                <small>
+                  Normal: &lt; 15.0
+                </small>
+
+              </div>
+
+            </div>
+
+
+            <div class="sensor">
+
+              <i>♨</i>
+
+              <div>
+
+                <span>
+                  Temperature
+                </span>
+
+                <strong>
+                  <span id="temperature">
+                    --
+                  </span>
+                  <small>
+                    °C
+                  </small>
+                </strong>
+
+                <small>
+                  Normal: &lt; 70.0
+                </small>
+
+              </div>
+
+            </div>
+
+
+            <div class="sensor">
+
+              <i>◌</i>
+
+              <div>
+
+                <span>
+                  RPM
+                </span>
+
+                <strong>
+                  <span id="rpm">
+                    --
+                  </span>
+
+                  <small>
+                    rpm
+                  </small>
+
+                </strong>
+
+                <small>
+                  Normal: 1400 - 1500
+                </small>
+
+              </div>
+
+            </div>
+
+
+            <div class="sensor">
+
+              <i>⇄</i>
+
+              <div>
+
+                <span>
+                  Belt Alignment
+                </span>
+
+                <strong>
+                  <span id="alignment">
+                    --
+                  </span>
+
+                  <small>
+                    °
+                  </small>
+
+                </strong>
+
+                <small>
+                  Normal: &lt; 3.0
+                </small>
+
+              </div>
+
+            </div>
+
+
+            <div class="sensor">
+
+              <i>▱</i>
+
+              <div>
+
+                <span>
+                  Belt Tension
+                </span>
+
+                <strong>
+                  <span id="tension">
+                    --
+                  </span>
+
+                  <small>
+                    %
+                  </small>
+
+                </strong>
+
+                <small>
+                  Normal: 50 - 80
+                </small>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- SERIAL CONTROL -->
+
+          <div class="serial-control">
+
+            <select id="portSelect">
+
+              <option>
+                Detecting ESP32...
+              </option>
+
+            </select>
+
+
+            <button id="connectBtn">
+              Connect ESP32
+            </button>
+
+
+            <span id="serialState">
+              Disconnected
+            </span>
+
+
+            <span
+              id="serialLastLine"
+              class="serial-last-line"
+            ></span>
+
+          </div>
+
+        </article>
+
+
+        <!-- AI DETECTION RESULT -->
+
+        <article class="card detection-card">
+
+          <div class="card-title">
+
+            <span class="title-icon">
+              ◉
+            </span>
+
+            <b>
+              AI Detection Result
+            </b>
+
+            <a
+              class="view-link"
+              data-view="ai"
+            >
+              Open AI Detection
+            </a>
+
+          </div>
+
+
+          <div class="detection-body">
+
+
+            <div
+              class="detection-image"
+              id="detectionPreview"
+            >
+
+              <div class="fake-belt"></div>
+
+              <span class="preview-note">
+                AI preview
+              </span>
+
+            </div>
+
+
+            <div class="detection-text">
+
+              <p>
+                <b>Class:</b>
+                <strong id="className">
+                  No detection
+                </strong>
+              </p>
+
+
+              <p>
+                <b>Confidence:</b>
+                <span id="confidence">
+                  0
+                </span>%
+              </p>
+
+
+              <p>
+                <b>Severity:</b>
+                <strong id="severity">
+                  Normal
+                </strong>
+              </p>
+
+
+              <p
+                class="description"
+                id="detectionDescription"
+              >
+                Waiting for live YOLO inspection.
+              </p>
+
+            </div>
+
+          </div>
+
+        </article>
+
+
+        <!-- HEALTH -->
+
+        <article class="card health-card">
+
+          <div class="card-title">
+
+            <span class="title-icon">
+              ⌁
+            </span>
+
+            <b>
+              Overall Health &amp; Prediction
+            </b>
+
+          </div>
+
+
+          <div class="health-body">
+
+            <div
+              class="gauge"
+              id="gauge"
+            >
+
+              <div>
+
+                <strong id="health">
+                  --
+                </strong>
+
+                <small>
+                  /100
+                </small>
+
+                <span>
+                  Health Score
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <div class="risk">
+
+              <span>
+                Failure Risk
+              </span>
+
+              <strong id="risk">
+                --%
+              </strong>
+
+              <div class="warning">
+
+                ⚠
+
+                <b id="status">
+                  OFFLINE
+                </b>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="recommend">
+
+            <b>
+              💡 Recommendation
+            </b>
+
+            <span id="recommendation">
+              Connect ESP32 to begin monitoring.
+            </span>
+
+          </div>
+
+        </article>
+
+
+        <!-- ALERTS -->
+
+        <article class="card alerts-card">
+
+          <div class="card-title">
+
+            <span class="title-icon alert-icon">
+              ♧
+            </span>
+
+            <b>
+              Recent Alerts
+            </b>
+
+            <a
+              class="view-link"
+              data-view="alerts"
+            >
+              View All
+            </a>
+
+          </div>
+
+
+          <table>
+
+            <thead>
+
+              <tr>
+                <th>Time</th>
+                <th>Type</th>
+                <th>Message</th>
+                <th>Severity</th>
+              </tr>
+
+            </thead>
+
+            <tbody id="alerts"></tbody>
+
+          </table>
+
+        </article>
+
+
+        <!-- TREND -->
+
+        <article class="card trend-card">
+
+          <div class="card-title">
+
+            <span class="title-icon">
+              ⌁
+            </span>
+
+            <b>
+              Sensor Trends (Last 1 Hour)
+            </b>
+
+            <div class="legend">
+
+              <span>
+                <i class="v"></i>
+                Vibration
+              </span>
+
+              <span>
+                <i class="c"></i>
+                Current
+              </span>
+
+              <span>
+                <i class="t"></i>
+                Temperature
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <canvas id="chart"></canvas>
+
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         LIVE VIEW
+    ================================================== -->
+
+    <section
+      class="view"
+      id="view-live"
+      aria-hidden="true"
+    >
+
+      <div class="page-head">
+
+        <div>
+
+          <h2>
+            Live View
+          </h2>
+
+          <p>
+            Full-screen USB webcam monitoring with live system status.
+          </p>
+
+        </div>
+
+        <span class="live-pill">
+          ● LIVE
+        </span>
+
+      </div>
+
+
+      <div class="live-layout">
+
+
+        <article class="card live-camera-card">
+
+          <div
+            class="camera-wrap large"
+            id="liveCameraWrap"
+          >
+
+            <video
+              id="liveCamera"
+              autoplay
+              playsinline
+              muted
+            ></video>
+
+
+            <canvas
+              id="liveCameraOverlay"
+              class="ai-overlay"
+            ></canvas>
+
+
+            <div class="camera-placeholder">
+
+              <div>
+                LIVE CAMERA
+              </div>
+
+              <small>
+                Start the camera from Dashboard or here.
+              </small>
+
+            </div>
+
+
+            <span class="fps">
+
+              FPS:
+              <span id="liveFps">
+                0
+              </span>
+
+            </span>
+
+          </div>
+
+
+          <div class="camera-actions">
+
+            <select id="liveCameraSelect">
+
+              <option value="">
+                Use dashboard camera
+              </option>
+
+            </select>
+
+
+            <button id="liveStart">
+              Start Camera
+            </button>
+
+
+            <button
+              id="liveStop"
+              class="stop-btn"
+            >
+              Stop
+            </button>
+
+          </div>
+
+        </article>
+
+
+        <aside class="card live-side">
+
+          <h3>
+            Live Machine Status
+          </h3>
+
+
+          <div class="mini-grid">
+
+
+            <div>
+              <span>Vibration</span>
+              <b id="liveVibration">
+                --
+              </b>
+            </div>
+
+
+            <div>
+              <span>Current</span>
+              <b id="liveCurrent">
+                --
+              </b>
+            </div>
+
+
+            <div>
+              <span>Temperature</span>
+              <b id="liveTemperature">
+                --
+              </b>
+            </div>
+
+
+            <div>
+              <span>RPM</span>
+              <b id="liveRpm">
+                --
+              </b>
+            </div>
+
+
+            <div>
+              <span>Health</span>
+              <b id="liveHealth">
+                --
+              </b>
+            </div>
+
+
+            <div>
+              <span>Risk</span>
+              <b id="liveRisk">
+                --%
+              </b>
+            </div>
+
+          </div>
+
+        </aside>
+
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         SENSOR DATA
+    ================================================== -->
+
+    <section
+      class="view"
+      id="view-sensors"
+      aria-hidden="true"
+    >
+
+      <div class="page-head">
+
+        <div>
+
+          <h2>
+            Sensor Data
+          </h2>
+
+          <p>
+            Live ESP32 readings and recent samples.
+          </p>
+
+        </div>
+
+
+        <button
+          class="secondary"
+          id="exportSensors"
+        >
+          Export CSV
+        </button>
+
+      </div>
+
+
+      <div class="stats-row">
+
+        <div class="stat card">
+
+          <span>
+            Samples
+          </span>
+
+          <b id="sampleCount">
+            0
+          </b>
+
+        </div>
+
+
+        <div class="stat card">
+
+          <span>
+            Last Update
+          </span>
+
+          <b id="lastUpdate">
+            --
+          </b>
+
+        </div>
+
+
+        <div class="stat card">
+
+          <span>
+            Connection
+          </span>
+
+          <b id="sensorConnection">
+            Offline
+          </b>
+
+        </div>
+
+      </div>
+
+
+      <article class="card table-card">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>Time</th>
+              <th>Vibration</th>
+              <th>Current</th>
+              <th>Temperature</th>
+              <th>RPM</th>
+              <th>Alignment</th>
+              <th>Tension</th>
+              <th>Health</th>
+              <th>Risk</th>
+            </tr>
+
+          </thead>
+
+          <tbody id="sensorTable"></tbody>
+
+        </table>
+
+      </article>
+
+    </section>
+
+
+    <!-- =================================================
+         AI DETECTION
+    ================================================== -->
+
+    <section
+      class="view"
+      id="view-ai"
+      aria-hidden="true"
+    >
+
+      <div class="page-head">
+
+        <div>
+
+          <h2>
+            AI Detection
+          </h2>
+
+          <p>
+            Real-time YOLO conveyor belt damage inspection.
+          </p>
+
+        </div>
+
+
+        <span
+          class="ai-state"
+          id="aiState"
+        >
+          AI STANDBY
+        </span>
+
+      </div>
+
+
+      <div class="ai-layout">
+
+
+        <article class="card ai-camera-card">
+
+          <div class="card-title">
+
+            <b>
+              Inspection Camera
+            </b>
+
+            <em>
+              ● LIVE
+            </em>
+
+          </div>
+
+
+          <div
+            class="camera-wrap large"
+            id="aiCameraWrap"
+          >
+
+            <video
+              id="aiCamera"
+              autoplay
+              playsinline
+              muted
+            ></video>
+
+
+            <canvas
+              id="aiCameraOverlay"
+              class="ai-overlay"
+            ></canvas>
+
+
+            <div class="camera-placeholder">
+
+              <div>
+                AI CAMERA
+              </div>
+
+              <small>
+                Start camera to inspect the conveyor belt.
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <div class="camera-actions">
+
+            <button id="aiStart">
+              Start Camera
+            </button>
+
+
+            <button
+              id="aiStop"
+              class="stop-btn"
+            >
+              Stop
+            </button>
+
+
+            <button
+              class="secondary"
+              id="runDetection"
+            >
+              Run Detection
+            </button>
+
+          </div>
+
+        </article>
+
+
+        <article class="card ai-result">
+
+          <div class="card-title">
+
+            <b>
+              Detection Result
+            </b>
+
+          </div>
+
+
+          <div class="result-big">
+
+            <span>
+              CLASS
+            </span>
+
+            <strong id="aiClass">
+              No detection
+            </strong>
+
+          </div>
+
+
+          <div class="result-grid">
+
+            <div>
+
+              <span>
+                Confidence
+              </span>
+
+              <b id="aiConfidence">
+                0%
+              </b>
+
+            </div>
+
+
+            <div>
+
+              <span>
+                Severity
+              </span>
+
+              <b id="aiSeverity">
+                Normal
+              </b>
+
+            </div>
+
+
+            <div>
+
+              <span>
+                Last Scan
+              </span>
+
+              <b id="aiLastScan">
+                --
+              </b>
+
+            </div>
+
+          </div>
+
+
+          <p id="aiMessage">
+            Start the camera to begin real YOLO inspection.
+          </p>
+
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         ALERTS
+    ================================================== -->
+
+    <section
+      class="view"
+      id="view-alerts"
+      aria-hidden="true"
+    >
+
+      <div class="page-head">
+
+        <div>
+
+          <h2>
+            Alerts
+          </h2>
+
+          <p>
+            Threshold violations and AI events.
+          </p>
+
+        </div>
+
+
+        <button
+          class="secondary"
+          id="clearAlerts"
+        >
+          Clear Alerts
+        </button>
+
+      </div>
+
+
+      <article class="card table-card">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>Time</th>
+              <th>Type</th>
+              <th>Message</th>
+              <th>Severity</th>
+              <th>Value</th>
+            </tr>
+
+          </thead>
+
+          <tbody id="allAlerts"></tbody>
+
+        </table>
+
+      </article>
+
+    </section>
+
+
+    <!-- =================================================
+         LOGS
+    ================================================== -->
+
+    <section
+      class="view"
+      id="view-logs"
+      aria-hidden="true"
+    >
+
+      <div class="page-head">
+
+        <div>
+
+          <h2>
+            Logs
+          </h2>
+
+          <p>
+            System, serial, camera and AI activity.
+          </p>
+
+        </div>
+
+
+        <button
+          class="secondary"
+          id="clearLogs"
+        >
+          Clear Logs
+        </button>
+
+      </div>
+
+
+      <article class="card table-card">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>Time</th>
+              <th>Event</th>
+              <th>Details</th>
+            </tr>
+
+          </thead>
+
+          <tbody id="logsTable"></tbody>
+
+        </table>
+
+      </article>
+
+    </section>
+
+
+    <!-- =================================================
+         SETTINGS
+    ================================================== -->
+
+    <section
+      class="view"
+      id="view-settings"
+      aria-hidden="true"
+    >
+
+      <div class="page-head">
+
+        <div>
+
+          <h2>
+            Settings
+          </h2>
+
+          <p>
+            Configure thresholds and dashboard behavior.
+          </p>
+
+        </div>
+
+
+        <button
+          class="primary"
+          id="saveSettings"
+        >
+          Save Settings
+        </button>
+
+      </div>
+
+
+      <div class="settings-grid">
+
+
+        <article class="card settings-card">
+
+          <h3>
+            Sensor Thresholds
+          </h3>
+
+
+          <label>
+            Vibration warning
+            <input
+              id="setVibration"
+              type="number"
+              step="0.1"
+            >
+          </label>
+
+
+          <label>
+            Motor current warning
+            <input
+              id="setCurrent"
+              type="number"
+              step="0.1"
+            >
+          </label>
+
+
+          <label>
+            Temperature warning
+            <input
+              id="setTemperature"
+              type="number"
+              step="0.1"
+            >
+          </label>
+
+
+          <label>
+            RPM minimum
+            <input
+              id="setRpmMin"
+              type="number"
+            >
+          </label>
+
+
+          <label>
+            RPM maximum
+            <input
+              id="setRpmMax"
+              type="number"
+            >
+          </label>
+
+
+          <label>
+            Alignment warning
+            <input
+              id="setAlignment"
+              type="number"
+              step="0.1"
+            >
+          </label>
+
+
+          <label>
+            Tension minimum
+            <input
+              id="setTensionMin"
+              type="number"
+              step="0.1"
+            >
+          </label>
+
+
+          <label>
+            Tension maximum
+            <input
+              id="setTensionMax"
+              type="number"
+              step="0.1"
+            >
+          </label>
+
+        </article>
+
+
+        <article class="card settings-card">
+
+          <h3>
+            Dashboard
+          </h3>
+
+
+          <label class="switch-row">
+
+            Enable alert sounds
+
+            <input
+              id="setSound"
+              type="checkbox"
+            >
+
+          </label>
+
+
+          <label class="switch-row">
+
+            Show AI bounding box
+
+            <input
+              id="setBox"
+              type="checkbox"
+              checked
+            >
+
+          </label>
+
+
+          <label class="switch-row">
+
+            Use demo AI result
+
+            <input
+              id="setDemoAI"
+              type="checkbox"
+              disabled
+            >
+
+          </label>
+
+
+          <div class="setting-note">
+
+            Real YOLO/Roboflow inference is enabled.
+            Demo AI mode has been disabled.
+
+            <br><br>
+
+            ESP32 sensor data is received through
+            the COM7 serial connection.
+
+          </div>
+
+
+          <button
+            class="danger-btn"
+            id="resetSettings"
+          >
+            Reset Defaults
+          </button>
+
+        </article>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<script src="app.js"></script>
+
+</body>
+
+</html>
