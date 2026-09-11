@@ -8,6 +8,9 @@ The system combines **IoT-based machine condition monitoring**, **AI-powered com
 
 ## 📌 Project Overview
 
+
+Please watch demonstration video - https://drive.google.com/file/d/1TQYuXpHkVkdQZf2GDL92i6emXmgB0LRV/view?usp=sharing
+
 Conveyor belts used in mining and heavy industries operate continuously under high mechanical loads and harsh environmental conditions.
 
 Over time, conveyor belts can develop:
